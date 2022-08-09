@@ -91,7 +91,7 @@ namespace Files_Compare
                 }
                 else if (getinput.Trim() == "n" || getinput.Trim() == "N")
                 {
-                    AwaitForExit("Await user input for exit...");
+                    AwaitForExit("> Await user input to exit...");
                 }
             }
             else // Made some extra checks, just in case  
