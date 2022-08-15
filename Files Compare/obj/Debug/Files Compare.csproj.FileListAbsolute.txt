@@ -20,3 +20,11 @@ C:\Users\Jacopo\Desktop\FilesCompare\Files Compare\obj\Debug\Files Compare.cspro
 C:\Users\Jacopo\Desktop\FilesCompare\Files Compare\obj\Debug\Files Compare.csproj.CoreCompileInputs.cache
 C:\Users\Jacopo\Desktop\FilesCompare\Files Compare\obj\Debug\Files Compare.exe
 C:\Users\Jacopo\Desktop\FilesCompare\Files Compare\obj\Debug\Files Compare.pdb
+C:\Users\Zenek\Desktop\FilesCompare\Files Compare\bin\Debug\Files Compare.exe.config
+C:\Users\Zenek\Desktop\FilesCompare\Files Compare\bin\Debug\Files Compare.exe
+C:\Users\Zenek\Desktop\FilesCompare\Files Compare\bin\Debug\Files Compare.pdb
+C:\Users\Zenek\Desktop\FilesCompare\Files Compare\obj\Debug\Files Compare.csproj.AssemblyReference.cache
+C:\Users\Zenek\Desktop\FilesCompare\Files Compare\obj\Debug\Files Compare.csproj.SuggestedBindingRedirects.cache
+C:\Users\Zenek\Desktop\FilesCompare\Files Compare\obj\Debug\Files Compare.csproj.CoreCompileInputs.cache
+C:\Users\Zenek\Desktop\FilesCompare\Files Compare\obj\Debug\Files Compare.exe
+C:\Users\Zenek\Desktop\FilesCompare\Files Compare\obj\Debug\Files Compare.pdb

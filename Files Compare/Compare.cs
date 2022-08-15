@@ -3,26 +3,32 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Files_Compare
 {
-    internal class Program
+    internal static class Compare
     {
         public const int MAX_SUB_FOLDER = 1000; // define the max loop (and the max subfolder possible) for the subfolder function 
 
         // TODO: implement a function wich remove duplicate items (MD5 checks)
         // TODO: create a config file for the 2 path
-        // Returns an array containing a list of all the md5 from the files in the folder pass as parameter -  WARNING: (should be not recursive)
+        // Returns an array containing a list of all the md5 from the files in the folder pass as parameter - WARNING: (should be not recursive)
         static void Main(string[] args)
         {
-            string path1 = @"C:\Users\Jacopo\Desktop\x"; // Main folder
-            string path2 = @"C:\Users\Jacopo\Desktop\y"; // Folder to integrate
+            string path1 = @"F"; // Main folder
+            string path2 = @"F"; // Subfolder 
+
+            string[][] matrix;
+
+            Console.WriteLine("> Start Loading files....");
             string[] HashPath1 = GetFileHash(path1);
             string[] HashPath2 = GetFileHash(path2);
             string[] filePaths = null;
 
-            if(path1 == null || path2 == null || HashPath1 == null || HashPath2 == null)
+            if(HashPath1 == null || HashPath2 == null)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 AwaitForExit($"\nCore information missing! ");
@@ -48,7 +54,7 @@ namespace Files_Compare
             if (ListOfDifference.Count != 0) // There are different files in folder 2, let's catch them
             {
                 var PathListAllMissMatch = new List<string>();
-                Console.WriteLine("> List of file Miss-matched:\n");
+                Console.WriteLine("\n\t\t\t\tList of file Miss-matched:\n");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("================\n");
 
@@ -61,7 +67,7 @@ namespace Files_Compare
                 }
 
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine($"\nNumber of file: {ListOfDifference.Count}");
+                Console.WriteLine($"\nNumber of file: {ListOfDifference.Count}/{filePaths.Count()}");
                 Console.WriteLine("================");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 
@@ -105,14 +111,64 @@ namespace Files_Compare
                     SecondFolder = System.Math.Round(SecondFolder, 2);
 
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"> Folders miss match!\nBUT first folder contains all files of second one, there may be duplicated files with same MD5! (Cloned files)\n\n----------\nFirst folder size: {FirstFolder} MB\nHashed File: {HashPath1.Count()}\n----------\n\n----------\nSecond folder size: {SecondFolder} MB\nHashed file: {HashPath2.Count()}\n----------");
+                    Console.WriteLine("\n=========================================\n");
+                    Console.WriteLine($"> Folders miss match!\n\nBUT first folder contains all files of second one, there may be duplicated files with same MD5! (Cloned files)\n\n----------\nFirst folder size: {FirstFolder} MB\nHashed File: {HashPath1.Count()}\n----------\n\n----------\nSecond folder size: {SecondFolder} MB\nHashed file: {HashPath2.Count()}\n----------");
                 }
                 // "else" folder have same items and size
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("\nFolder contains same items!");
+                Console.WriteLine("\nFolder contains same items!\n{PRESS ENTER CONTINUE...}");
+                Console.ReadKey();
             }
 
+            // Check duplication entries
+            Console.WriteLine("\n> Start checking for duplicated items...\n");
+            Thread.Sleep(3000);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n> First Group: HashPath1\n");
+            FindDuplicates(HashPath1, path1);
+            Console.WriteLine("\n> Second Group: HashPath2\n");
+            FindDuplicates(HashPath2, path2);
             Console.ReadKey();
+        }
+
+        public static string Parser(this string s)
+        {
+            StringBuilder sb = new StringBuilder(s);
+
+            sb.Replace("&", "");
+            sb.Replace(",", "");
+            sb.Replace("  ", "");
+            sb.Replace(" ", "_");
+            sb.Replace("'", "");
+            //sb.Replace(".", "");
+            sb.Replace(@"\", "");
+            sb.Replace(@"{", "");
+            sb.Replace(@"}", "");
+            sb.Replace(@"(", "");
+            sb.Replace(@")", "");
+            sb.Replace(@"-", "");
+
+            return sb.ToString().ToLower();
+        }
+
+        public static void FindDuplicates(string[] MD5Array, string PathToMD5Array)
+        {
+            int counter = 0;
+            string[] filePaths = Directory.GetFiles(PathToMD5Array);
+            foreach (var number in MD5Array.GroupBy(x => x))
+            {
+                //Console.WriteLine(number.Count());
+                if ((number.Count() - 1) != 0)
+                {
+                    //Console.WriteLine(number.Key + " repeats " + (number.Count() - 1) + " times");
+
+                    string fileName = Parser((Path.GetFileName(filePaths[counter])));
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("\t- "+fileName + "\t\t[repeats " + (number.Count() - 1) + " times]");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+                counter++;
+            }
         }
 
         private static void AwaitForExit(string text)
@@ -156,14 +212,22 @@ namespace Files_Compare
         // Move all file from path2 into path1
         public static void MoveFiles(string destinationPath, List<string> FilesToMove)
         {
-            foreach (string file in FilesToMove)
+            int i = 0;
+            try
             {
-                string destinazione = destinationPath + "\\" + Path.GetFileName(file);
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"\t Working on: {Path.GetFileName(file)}");
-                File.Copy(file, destinazione);
+                foreach (string file in FilesToMove)
+                {
+                    string destinazione = destinationPath + "\\" + Path.GetFileName(file);
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine($"\t Working on: {Path.GetFileName(file)} \t\t\t\t\t [{i}/{FilesToMove.Count()}]");
+                    File.Copy(file, destinazione);
+                    i++;
+                }
             }
-
+            catch(Exception ex)
+            {
+                AwaitForExit($"ERROR:\n{ex}");
+            }
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
@@ -188,28 +252,38 @@ namespace Files_Compare
 
             return size;
         }
+
         // Calculate the md5 of all file inside an array (an array of file)
         static string[] GetFileHash(string path)
         {
+
             if(path != null)
             {
                 try
                 {
-                    string[] filePaths = Directory.GetFiles(path); // exception
+                    string[] filePaths = Directory.GetFiles(path);
                     string[] HashPath = new string[filePaths.Count()];
+                    var dirName = new DirectoryInfo(path).Name;
 
                     for (int i = 0; i < filePaths.Count(); i++)
                     {
                         HashPath[i] = CalculateMD5(filePaths[i]);
+                        Console.WriteLine($"\t- Loading file: {i}/{filePaths.Count()} - Directory: [{dirName}] - Hash: {HashPath[i]}");
                     }
-
-                    return (HashPath);
+                    if (HashPath != null)
+                    {
+                        Console.WriteLine($"\n> List of hash correctly loaded!\n");
+                        return HashPath;
+                    }
+                    else
+                        AwaitForExit("HashPath is null, unable to retreive file list!");
                 }
                 catch (Exception ex)
                 {
                     AwaitForExit($"ERROR:\n{ex}");
                 }
             }
+            AwaitForExit("Path not exist!");
             return null;
         }
 
@@ -239,6 +313,51 @@ namespace Files_Compare
                     return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
                 }
             }
+        }
+
+        /// <summary>
+        /// Print the Duplicate items
+        /// </summary>
+        /// <param name="path1"></param>
+        public static void PrintDuplicate(string path1) //HashPath1 is a list of all MD'5 file in directory
+        {
+            try
+            {
+                string[] HashPath1 = GetFileHash(path1); // Get list of file hashed
+                string[] filePaths = Directory.GetFiles(path1); // Get list of files
+
+                var Dup = GetDuplicate(HashPath1); // return the position of the file duplicated (as int, List)
+
+                Console.WriteLine("\t\t\tDuplicated file:\n");
+                foreach (int position in Dup)
+                {
+                    Console.WriteLine(filePaths[position]);
+                }
+            }
+            catch (Exception ex)
+            {
+                AwaitForExit($"ERROR \n {ex}");
+            }
+
+        }
+
+        /// <summary>
+        /// Return a list of int which indicate the position of the string duplicated, check is maded trough MD5
+        /// </summary>
+        /// <param name="HashPath1"></param>
+        /// <returns></returns>
+        public static List<int> GetDuplicate(string[] HashPath1)
+        {
+            var Difference = new List<int>();
+            for (int j = 0; j < HashPath1.Count(); j++)
+            {
+                if (HashPath1.Contains(HashPath1[j]))
+                {
+                    // if Difference already contain the duplication then skip, you have one more than 1 duplicate inside, avoid it 
+                    Difference.Add(j);
+                }
+            }
+            return Difference;
         }
     }
 }
