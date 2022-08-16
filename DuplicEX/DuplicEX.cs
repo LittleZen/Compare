@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace TEST
 {    
-    internal static class Program
+    internal static class DuplicEX
     {
         public const int MAX_SUB_FOLDER = 1000;
         public static List<string> Hash = new List<string>(); // A list of all MD5 from the files

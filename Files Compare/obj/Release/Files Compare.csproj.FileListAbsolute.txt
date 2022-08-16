@@ -1,8 +1,0 @@
-C:\Users\Zenek\source\repos\FilesCompare\Files Compare\bin\Release\Files Compare.exe.config
-C:\Users\Zenek\source\repos\FilesCompare\Files Compare\bin\Release\Files Compare.exe
-C:\Users\Zenek\source\repos\FilesCompare\Files Compare\bin\Release\Files Compare.pdb
-C:\Users\Zenek\source\repos\FilesCompare\Files Compare\obj\Release\Files Compare.csproj.AssemblyReference.cache
-C:\Users\Zenek\source\repos\FilesCompare\Files Compare\obj\Release\Files Compare.csproj.SuggestedBindingRedirects.cache
-C:\Users\Zenek\source\repos\FilesCompare\Files Compare\obj\Release\Files Compare.csproj.CoreCompileInputs.cache
-C:\Users\Zenek\source\repos\FilesCompare\Files Compare\obj\Release\Files Compare.exe
-C:\Users\Zenek\source\repos\FilesCompare\Files Compare\obj\Release\Files Compare.pdb
