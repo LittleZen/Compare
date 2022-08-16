@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TEST")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("DuplicX")]
+[assembly: AssemblyDescription("Allow to remove duplicates files, it use sha512/MD5 as detect algorithm")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TEST")]
+[assembly: AssemblyCompany("LittleZen - Lab")]
+[assembly: AssemblyProduct("DuplicX")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("LZL")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible

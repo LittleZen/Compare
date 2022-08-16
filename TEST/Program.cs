@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace TEST
 {    
-    internal class Program
+    internal static class Program
     {
-
+        public const int MAX_SUB_FOLDER = 1000;
         public static List<string> Hash = new List<string>(); // A list of all MD5 from the files
         public static List<string> FilesPath = new List<string>(); // A list of all MD5 from the files
         public static List<int> Duplicates = new List<int>(); // maybe not useful anymore  
@@ -162,6 +162,57 @@ namespace TEST
                     }
                 } 
             }
+        }
+
+        // === THE FOLLOWING FUNCTIONS ARE NOT CURRENTLY USED, BUT THEY WILL BE ADDED SOON AS NEW FEATURES (INSTEAD REMOVE, MOVE DUPLICATES FILE IN A NEW FOLDER) === //
+        public static string CreateSubFolder(string path)
+        {
+            int counter = 0;
+            string subfolderpath = null;
+            while (counter < MAX_SUB_FOLDER)
+            {
+                subfolderpath = Path.Combine(path, counter.ToString());
+                Console.WriteLine($"Creating subfolder in: {subfolderpath} ...");
+                Thread.Sleep(500);
+                try
+                {
+                    if (!Directory.Exists(subfolderpath))
+                    {
+                        Directory.CreateDirectory(subfolderpath);
+                        break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AwaitForExit($"ERRORE\n{ex}");
+                }
+                counter++;
+            }
+            if (counter == MAX_SUB_FOLDER)
+            {
+                AwaitForExit("MAX SUB FOLDER REACHED!");
+            }
+            return subfolderpath;
+        }
+
+        public static string Parser(this string s)
+        {
+            StringBuilder sb = new StringBuilder(s);
+
+            sb.Replace("&", "");
+            sb.Replace(",", "");
+            sb.Replace("  ", "");
+            sb.Replace(" ", "");
+            sb.Replace("'", "");
+            //sb.Replace(".", "");
+            sb.Replace(@"\", "");
+            sb.Replace(@"{", "");
+            sb.Replace(@"}", "");
+            sb.Replace(@"(", "");
+            sb.Replace(@")", "");
+            sb.Replace(@"-", "");
+
+            return sb.ToString().ToLower();
         }
     }
 }

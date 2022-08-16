@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Files Compare", "Files Compare\Files Compare.csproj", "{403D6985-AE94-4192-BAA0-879112E3D909}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComparEX", "Files Compare\ComparEX.csproj", "{403D6985-AE94-4192-BAA0-879112E3D909}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Files Duplicate", "Files Duplicate\Files Duplicate.csproj", "{3419EFB1-38E2-483F-A01D-DF4DED41E298}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TEST", "TEST\TEST.csproj", "{E0B859AC-E3B0-4862-B7B4-552472AD687A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DuplicX", "TEST\DuplicX.csproj", "{E0B859AC-E3B0-4862-B7B4-552472AD687A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +17,6 @@ Global
 		{403D6985-AE94-4192-BAA0-879112E3D909}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{403D6985-AE94-4192-BAA0-879112E3D909}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{403D6985-AE94-4192-BAA0-879112E3D909}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3419EFB1-38E2-483F-A01D-DF4DED41E298}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3419EFB1-38E2-483F-A01D-DF4DED41E298}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3419EFB1-38E2-483F-A01D-DF4DED41E298}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3419EFB1-38E2-483F-A01D-DF4DED41E298}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E0B859AC-E3B0-4862-B7B4-552472AD687A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E0B859AC-E3B0-4862-B7B4-552472AD687A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0B859AC-E3B0-4862-B7B4-552472AD687A}.Release|Any CPU.ActiveCfg = Release|Any CPU

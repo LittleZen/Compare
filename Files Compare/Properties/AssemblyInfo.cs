@@ -4,13 +4,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Files Compare")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ComparEX")]
+[assembly: AssemblyDescription("Allow to merge 2 folder, it use MD5/SHA512 to avoid duplicates")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Files Compare")]
+[assembly: AssemblyCompany("LittleZen - Lab")]
+[assembly: AssemblyProduct("ComparEX")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("LZL")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
