@@ -49,10 +49,9 @@ namespace TEST
             }
             return true;
         }
-
         static string CalculateMD5(string filename)
         {
-#if (DEBUG && !MD5) 
+#if (!MD5) 
 
 // using SHA512 algorith, slower but more precise
             using (var sha = SHA512.Create())
@@ -63,7 +62,6 @@ namespace TEST
                     return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
                 }
             }
-
 #else
             using (var md5 = MD5.Create())
             {
@@ -114,13 +112,10 @@ namespace TEST
             if (!status)
                 Console.WriteLine("Better exit now");
 
-            Console.WriteLine("\nStarting Checks\n");
+            Console.WriteLine("\nStarting Checks...\n");
             GetDiff();
 
-
             string[] dist = Hash.Distinct().ToArray();
-
-
             Console.WriteLine("\nDistinct Elements\n");
 
             foreach (int number in Duplicates)
@@ -135,14 +130,10 @@ namespace TEST
                     Console.WriteLine($"Unable to delete due:\n{ex}");
                     Console.ReadKey(); // MAY BE DELETED IN FUTURE
                 }
-               
             }
-
             Console.WriteLine($"\nTotal Duplicates: {countDuplicates}");
-
             Main();
         }
-
         public static void GetDiff()
         {
             for(int i = 0; i < Hash.Count(); i++)
@@ -194,7 +185,6 @@ namespace TEST
             }
             return subfolderpath;
         }
-
         public static string Parser(this string s)
         {
             StringBuilder sb = new StringBuilder(s);
