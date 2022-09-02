@@ -18,6 +18,7 @@ namespace TEST
         public static List<string> FilesPath = new List<string>(); // A list of all MD5 from the files
         public static List<int> Duplicates = new List<int>(); // maybe not useful anymore  
         public static int countDuplicates = 0;
+        public static int TotalFile = 0;
 
         static bool GetFileResources(string path)
         {
@@ -26,30 +27,29 @@ namespace TEST
                 try
                 {
                     string[] filePaths = Directory.GetFiles(path);
-                    //string[] HashPath = new string[filePaths.Count()];
                     var dirName = new DirectoryInfo(path).Name;
-
+                    TotalFile = filePaths.Count();
                     for (int i = 0; i < filePaths.Count(); i++)
                     {
                         FilesPath.Add(filePaths[i]);
-                        Hash.Add(CalculateMD5(filePaths[i]));
+                        Hash.Add(CalculateHash(filePaths[i]));
                         Console.WriteLine($"\t- Loading file: {i + 1}/{filePaths.Count()} - Directory: [{dirName}] - Hash: {Hash[i]}");
                     }
                 }
                 catch (Exception ex)
-                {
-                    AwaitForExit($"ERROR:\n{ex}");
-                    return false;
-                }
-            }
-            else
-            {
-                AwaitForExit("Path is null!");
-                return false;
-            }
-            return true;
-        }
-        static string CalculateMD5(string filename)
+                {                                                    
+                    AwaitForExit($"ERROR:\n{ex}");                   
+                    return false;                                    
+                }                                                    
+            }                                                        
+            else                                                     
+            {                                                        
+                AwaitForExit("Path is null!");                       
+                return false;                                        
+            }                                                        
+            return true;                                             
+        }                                                            
+        static string CalculateHash(string filename)
         {
 #if (!MD5) 
 
@@ -72,21 +72,17 @@ namespace TEST
                 }
             }
 #endif
-        }
+        }              
         private static void AwaitForExit(string text)
         {
             Console.WriteLine(text); // write the text passed as parameter
             Console.ReadKey();  // await user read the text
             Environment.Exit(1); // Exit with error code 1 
-        }
+        }             
         static void Main()
         {
-            // RESET GLOBAL VAR
-            countDuplicates = 0;
-            Hash.Clear();
-            FilesPath.Clear();
-            Duplicates.Clear();
-
+            // RESET GLOBAL VAR 
+            ResetGlobal();
 #if MD5
             Console.Write("\n[MD5] Give me a path:");
             Console.WriteLine();
@@ -94,6 +90,7 @@ namespace TEST
              Console.WriteLine("\n[SHA512] Give me a path:");
              Console.WriteLine();
 #endif
+            var startTime = DateTime.Now;
 
             string path1 = Console.ReadLine().Replace("\"", ""); // need to be protect
             bool status = false; // Check list status 
@@ -112,11 +109,11 @@ namespace TEST
             if (!status)
                 Console.WriteLine("Better exit now");
 
-            Console.WriteLine("\nStarting Checks...\n");
+            Console.WriteLine("\n> Finding duplicates...\n");
             GetDiff();
 
             string[] dist = Hash.Distinct().ToArray();
-            Console.WriteLine("\nDistinct Elements\n");
+            Console.WriteLine("\nDuplicates:\n");
 
             foreach (int number in Duplicates)
             {
@@ -132,8 +129,15 @@ namespace TEST
                 }
             }
             Console.WriteLine($"\nTotal Duplicates: {countDuplicates}");
+
+            var endTime = DateTime.Now;
+            TimeSpan timeDiff = endTime - startTime;
+            var converted = timeDiff.ToString().Replace("00:00:",""); //replace 2 times
+            Console.WriteLine($"\nStart:\t\t{startTime}\nEnd:\t\t{endTime}\nEllapsed:\t{converted}s\nFile Checked:\t{TotalFile}");
+            Thread.Sleep(3000);
+
             Main();
-        }
+        }                                        
         public static void GetDiff()
         {
             for(int i = 0; i < Hash.Count(); i++)
@@ -153,6 +157,15 @@ namespace TEST
                     }
                 } 
             }
+        }
+        public static void ResetGlobal()
+        {
+            // Reset Global Var
+            countDuplicates = 0;
+            TotalFile = 0;
+            Hash.Clear();
+            FilesPath.Clear();
+            Duplicates.Clear();
         }
 
         // === THE FOLLOWING FUNCTIONS ARE NOT CURRENTLY USED, BUT THEY WILL BE ADDED SOON AS NEW FEATURES (INSTEAD REMOVE, MOVE DUPLICATES FILE IN A NEW FOLDER) === //

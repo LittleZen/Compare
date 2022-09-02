@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E0B859AC-E3B0-4862-B7B4-552472AD687A}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>DuplicX</RootNamespace>
-    <AssemblyName>DuplicX</AssemblyName>
+    <RootNamespace>DuplicEX</RootNamespace>
+    <AssemblyName>DuplicEX</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
