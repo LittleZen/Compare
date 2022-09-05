@@ -13,12 +13,13 @@ namespace TEST
 {    
     internal static class DuplicEX
     {
-        public const int MAX_SUB_FOLDER = 1000;
+        public const int MAX_SUB_FOLDER = 1000; // currently not used
         public static List<string> Hash = new List<string>(); // A list of all MD5 from the files
         public static List<string> FilesPath = new List<string>(); // A list of all MD5 from the files
         public static List<int> Duplicates = new List<int>(); // maybe not useful anymore  
         public static int countDuplicates = 0;
         public static int TotalFile = 0;
+
 
         static bool GetFileResources(string path)
         {
@@ -51,26 +52,43 @@ namespace TEST
         }                                                            
         static string CalculateHash(string filename)
         {
-#if (!MD5) 
+#if (!MD5) // it use SHA512 if MD5 is not available
 
 // using SHA512 algorith, slower but more precise
-            using (var sha = SHA512.Create())
+            try
             {
-                using (var stream = File.OpenRead(filename))
+                using (var sha = SHA512.Create())
                 {
-                    var hash = sha.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    using (var stream = File.OpenRead(filename))
+                    {
+                        var hash = sha.ComputeHash(stream);
+                        return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                AwaitForExit($"Error during Hash calculation\n{ex}");
+                return null;
             }
 #else
-            using (var md5 = MD5.Create())
+            try
             {
-                using (var stream = File.OpenRead(filename))
+                using (var md5 = MD5.Create())
                 {
-                    var hash = md5.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    using (var stream = File.OpenRead(filename)) // read the file passed as parameter
+                    {
+                        var hash = md5.ComputeHash(stream); // calculate the MD5 of the file passed as parameter
+                        return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant(); // clean and return the hash
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                AwaitForExit($"Error during Hash calculation\n{ex}");
+                return null;
+            }
+            
 #endif
         }              
         private static void AwaitForExit(string text)
@@ -81,8 +99,7 @@ namespace TEST
         }             
         static void Main()
         {
-            // RESET GLOBAL VAR 
-            ResetGlobal();
+            ResetGlobal(); // RESET GLOBAL VAR 
 #if MD5
             Console.Write("\n[MD5] Give me a path:");
             Console.WriteLine();
@@ -90,32 +107,32 @@ namespace TEST
              Console.WriteLine("\n[SHA512] Give me a path:");
              Console.WriteLine();
 #endif
-            var startTime = DateTime.Now;
+            var startTime = DateTime.Now; // catch the initial time (before execution)
 
-            string path1 = Console.ReadLine().Replace("\"", ""); // need to be protect
+            string path1 = Console.ReadLine().Replace("\"", ""); // get path from user input
             bool status = false; // Check list status 
 
-            try // equal to If Direcotry exist 
+            try // equal to "if Direcotry exist", but catch more exception  
             {
-                string[] filePaths = Directory.GetFiles(path1);
-                status = GetFileResources(path1);
+                string[] filePaths = Directory.GetFiles(path1); // return all files from the directory specified
+                status = GetFileResources(path1); // load a list of all files path retreived from the directory passed as input + load the list of hashes for every files in the directory passed as input
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error:\n{ex}");
-                Main(); //just relaunch it 
+                Console.WriteLine($"Unable to retreive information from the path specified:\n{ex}");
+                Main(); //just relaunch it if errors occur
             }
 
-            if (!status)
-                Console.WriteLine("Better exit now");
+            if (!status) // returned from the function GetFileResources. If false it exited wrong
+                AwaitForExit("Failed to retreive information, [DEBUG: status return false]");
 
             Console.WriteLine("\n> Finding duplicates...\n");
-            GetDiff();
+            GetDiff(); // Engine, this function verify if occur any duplicates
 
-            string[] dist = Hash.Distinct().ToArray();
             Console.WriteLine("\nDuplicates:\n");
 
-            foreach (int number in Duplicates)
+            // cycle the Duplicates list and removes all duplicates
+            foreach (int number in Duplicates) 
             {
                 try
                 {
@@ -130,15 +147,16 @@ namespace TEST
             }
             Console.WriteLine($"\nTotal Duplicates: {countDuplicates}");
 
-            var endTime = DateTime.Now;
-            TimeSpan timeDiff = endTime - startTime;
-            var converted = timeDiff.ToString().Replace("00:00:",""); //replace 2 times
+            var endTime = DateTime.Now; // catch the time when execution end
+            TimeSpan timeDiff = endTime - startTime; // calculate difference between time start and end 
+            var converted = timeDiff.ToString().Replace("00:00:",""); //clean the output string and prepare it to the output
             Console.WriteLine($"\nStart:\t\t{startTime}\nEnd:\t\t{endTime}\nEllapsed:\t{converted}s\nFile Checked:\t{TotalFile}");
             Thread.Sleep(3000);
 
             Main();
-        }                                        
-        public static void GetDiff()
+        }     
+        
+        public static void GetDiff() // Engine
         {
             for(int i = 0; i < Hash.Count(); i++)
             {
@@ -152,15 +170,14 @@ namespace TEST
                             Console.WriteLine($"\n>===========\n{Path.GetFileName(FilesPath[i])}\nHash: {Hash[i]}\n\n{Path.GetFileName(FilesPath[j])}\nHash: {Hash[j]}\n===========");
                             Hash[j] = "0"; // so the hash will not be researched once reached. Is a stupid solution, but atm necessary
                             countDuplicates++;
-                        }
-                        //Console.Write("\n");    
+                        } 
                     }
                 } 
             }
         }
         public static void ResetGlobal()
         {
-            // Reset Global Var
+            // Reset Global Var, before restart
             countDuplicates = 0;
             TotalFile = 0;
             Hash.Clear();

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComparEX", "ComparEX\ComparEX.csproj", "{403D6985-AE94-4192-BAA0-879112E3D909}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DuplicX", "DuplicEX\DuplicX.csproj", "{E0B859AC-E3B0-4862-B7B4-552472AD687A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DuplicEX", "DuplicEX\DuplicEX.csproj", "{E0B859AC-E3B0-4862-B7B4-552472AD687A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
