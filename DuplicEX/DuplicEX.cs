@@ -137,7 +137,7 @@ namespace TEST
                 try
                 {
                     File.Delete(FilesPath[number]);
-                    Console.WriteLine($"> DELETING: {FilesPath[number]}");
+                    Console.WriteLine($"> [DELETING]: {FilesPath[number]}");
                 }
                 catch (Exception ex)
                 {
@@ -167,7 +167,7 @@ namespace TEST
                         if ((Hash[j] != null) && (Hash[i] == Hash[j]) && (i != j) && (Hash[j] != "0"))
                         {
                             Duplicates.Add(j);
-                            Console.WriteLine($"\n>===========\n{Path.GetFileName(FilesPath[i])}\nHash: {Hash[i]}\n\n{Path.GetFileName(FilesPath[j])}\nHash: {Hash[j]}\n===========");
+                            Console.WriteLine($"\n>===========\n{Path.GetFileName(FilesPath[i])}\nHash: {Hash[i]}\n\n{Path.GetFileName(FilesPath[j])}\nHash: {Hash[j]}\n>===========");
                             Hash[j] = "0"; // so the hash will not be researched once reached. Is a stupid solution, but atm necessary
                             countDuplicates++;
                         } 

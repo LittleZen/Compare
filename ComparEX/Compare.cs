@@ -18,8 +18,8 @@ namespace Files_Compare
         // Returns an array containing a list of all the md5 from the files in the folder pass as parameter - WARNING: (should be not recursive)
         static void Main(string[] args)
         {
-            string path1 = @"F"; // Main folder
-            string path2 = @"F"; // Subfolder 
+            string path1 = @""; // Main folder
+            string path2 = @""; // Subfolder 
 
             string[][] matrix;
 
