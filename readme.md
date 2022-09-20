@@ -4,6 +4,6 @@ Documentation will be available soon ...
 
 ##Current Tools Supported:
 
--[x] ComparEX (This tool can merge 2 folders. It use MD5/SHA512 to analyze the data and only merge the unsync files. It also check for duplicates and automatically remove it)
+- [x] ComparEX (This tool can merge 2 folders. It use MD5/SHA512 to analyze the data and only merge the unsync files. It also check for duplicates and automatically remove it)
 
--[x] DuplicEX (This tool check a folder and use hash algorithms to delete the duplicates)
+- [x] DuplicEX (This tool check a folder and use hash algorithms to delete the duplicates)
