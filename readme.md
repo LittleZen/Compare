@@ -11,6 +11,6 @@ Documentation will be available soon ...
 
 -----------
 
-### Changelogs
+### Changelogs:
 
 *No Changelog current available*
