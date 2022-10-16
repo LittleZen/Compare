@@ -18,8 +18,8 @@ namespace Files_Compare
         // Returns an array containing a list of all the md5 from the files in the folder pass as parameter - WARNING: (should be not recursive)
         static void Main(string[] args)
         {
-            string path1 = @""; // Main folder
-            string path2 = @""; // Subfolder 
+            string path1 = @"F:\1 - Linux SubSystem\8 - TikTok\data\Likes\videos"; // Main folder
+            string path2 = @"C:\Users\Zenek\Desktop\strange\TT\data\Likes\videos"; // Subfolder 
 
             string[][] matrix;
 
@@ -128,6 +128,7 @@ namespace Files_Compare
             FindDuplicates(HashPath1, path1);
             Console.WriteLine("\n> Second Group: HashPath2\n");
             FindDuplicates(HashPath2, path2);
+            Console.WriteLine("Finish!");
             Console.ReadKey();
         }
 

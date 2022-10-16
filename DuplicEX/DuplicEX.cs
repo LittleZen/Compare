@@ -151,8 +151,7 @@ namespace TEST
             TimeSpan timeDiff = endTime - startTime; // calculate difference between time start and end 
             var converted = timeDiff.ToString().Replace("00:00:",""); //clean the output string and prepare it to the output
             Console.WriteLine($"\nStart:\t\t{startTime}\nEnd:\t\t{endTime}\nEllapsed:\t{converted}s\nFile Checked:\t{TotalFile}");
-            Thread.Sleep(3000);
-
+            //Thread.Sleep(3000);
             Main();
         }     
         
