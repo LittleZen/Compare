@@ -1,7 +1,8 @@
-﻿#define MD5 // Activate md5 encoding
+﻿#define MD5 // activate MD5 encoding
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -9,9 +10,24 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TEST
-{    
-    internal static class DuplicEX
+namespace REDupliX
+{
+
+    class CustomFolder
+    {
+        public string[] path;
+        public int duplicates;
+        public bool status;
+
+        public CustomFolder(string[] _path, int _duplicates, bool _status)
+        {
+            this.path = _path;
+            this.duplicates = _duplicates;
+            this.status = _status;
+        }
+    }
+
+    internal static class REDupliX
     {
         public const int MAX_SUB_FOLDER = 1000; // currently not used
         public static List<string> Hash = new List<string>(); // A list of all MD5 from the files
@@ -27,32 +43,86 @@ namespace TEST
             Console.Write("\n[MD5] Give me a path:");
             Console.WriteLine();
 #else
-             Console.WriteLine("\n[SHA512] Give me a path:");
-             Console.WriteLine();
+            Console.WriteLine("\n[SHA512] Give me a path:");
+            Console.WriteLine();
 #endif
-            var startTime = DateTime.Now; // catch the initial time (before execution)
 
             string path1 = Console.ReadLine().Replace("\"", ""); // get path from user input
-            bool status = false; // Check list status 
 
-            try // equal to "if Direcotry exist", but catch more exception  
+            Console.WriteLine("");
+            Console.WriteLine("");
+            
+            if(!Directory.Exists(path1))
             {
-                //string[] filePaths = Directory.GetFiles(path1); // return all files from the directory specified
-                status = GetFileResources(path1); // load a list of all files path retreived from the directory passed as input + load the list of hashes for every files in the directory passed as input
+                Console.WriteLine("\nNot a valid Path!\n");
+                Main();
+            }
+            // chiama ricorsivamente e stampa i tempi
+            var startTime = DateTime.Now; // catch the initial time (before execution)
+
+            ProcessDirectory(path1); // Execute the script
+
+            var endTime = DateTime.Now; // catch the time when execution end
+            TimeSpan timeDiff = endTime - startTime; // calculate difference between time start and end 
+            var converted = timeDiff.ToString().Replace("00:00:", ""); //clean the output string and prepare it to the output
+            
+            Console.WriteLine($"\nStart:\t\t{startTime}" +
+                              $"\nEnd:\t\t{endTime}" +
+                              $"\nEllapsed:\t{converted}s" +
+                              $"\nFile Checked:\t{TotalFile}");
+
+            Main();
+        }
+
+        static void ProcessDirectory(string targetDirectory)
+        {
+            try
+            {
+                // Apply your script logic to the current directory
+                ProcessFolder(targetDirectory);
+                ResetGlobal();
+
+                // Recursively process all subdirectories
+                string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
+                foreach (string subdirectory in subdirectoryEntries)
+                {
+                    // Recursive call to process each subdirectory
+                    ProcessDirectory(subdirectory);
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unable to retreive information from the path specified:\n{ex}");
-                Main(); //just relaunch it if errors occur
+                Console.WriteLine($"Error processing directory {targetDirectory}: {ex.Message}");
+            }
+        }
+
+        static bool ProcessFolder(string path)
+        {
+            bool status = false;
+
+            if (!Directory.Exists(path))
+                return false;
+
+            
+            Console.WriteLine($"|<====================>|\n-Loading Hashed files for: ---> {path}\n");
+            
+            try // equal to "if Direcotry exist", but catch more exception  
+            {
+                status = GetFileResources(path); // load a list of all files path retreived from the directory passed as input + load the list of hashes for every files in the directory passed as input
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"# Unable to retreive information from the path specified:\n{ex}");
+                return false;
             }
 
             if (!status) // returned from the function GetFileResources. If false it exited wrong
-                AwaitForExit("Failed to retreive information, [DEBUG: status return false]");
+                AwaitForExit("# Failed to retreive information, [DEBUG: status return false]");
 
-            Console.WriteLine("\n> Finding duplicates...\n");
+            Console.WriteLine("\n\t> Finding duplicates...");
             GetDiff(); // Engine, this function verify if occur any duplicates
 
-            Console.WriteLine("\nDuplicates:\n");
+            Console.WriteLine("\n\t> Duplicates:\n");
 
             // cycle the Duplicates list and removes all duplicates
             foreach (int number in Duplicates)
@@ -60,22 +130,15 @@ namespace TEST
                 try
                 {
                     File.Delete(FilesPath[number]);
-                    Console.WriteLine($"> [DELETING]: {FilesPath[number]}");
+                    Console.WriteLine($"\t| [DELETING]: {FilesPath[number]}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Unable to delete due:\n{ex}");
-                    Console.ReadKey(); // MAY BE DELETED IN FUTURE
+                    Console.WriteLine($"# Unable to delete due:\n{ex}");
                 }
             }
-            Console.WriteLine($"\nTotal Duplicates: {countDuplicates}");
-
-            var endTime = DateTime.Now; // catch the time when execution end
-            TimeSpan timeDiff = endTime - startTime; // calculate difference between time start and end 
-            var converted = timeDiff.ToString().Replace("00:00:", ""); //clean the output string and prepare it to the output
-            Console.WriteLine($"\nStart:\t\t{startTime}\nEnd:\t\t{endTime}\nEllapsed:\t{converted}s\nFile Checked:\t{TotalFile}");
-            //Thread.Sleep(3000);
-            Main();
+            Console.WriteLine($"\n|<====================>|\n\n\n> Loading next folder...\n\n");
+            return true;
         }
         static bool GetFileResources(string path)
         {
@@ -90,27 +153,27 @@ namespace TEST
                     {
                         FilesPath.Add(filePaths[i]);
                         Hash.Add(CalculateHash(filePaths[i]));
-                        Console.WriteLine($"\t- Loading file: {i + 1}/{filePaths.Count()} - Directory: [{dirName}] - Hash: {Hash[i]}");
+                        //Console.WriteLine($"\t- Loading file: {i + 1}/{filePaths.Count()} - Directory: [{dirName}] - Hash: {Hash[i]}");
                     }
                 }
                 catch (Exception ex)
-                {                                                    
-                    AwaitForExit($"ERROR:\n{ex}");                   
-                    return false;                                    
-                }                                                    
-            }                                                        
-            else                                                     
-            {                                                        
-                AwaitForExit("Path is null!");                       
-                return false;                                        
-            }                                                        
-            return true;                                             
-        }                                                            
+                {
+                    AwaitForExit($"ERROR:\n{ex}");
+                    return false;
+                }
+            }
+            else
+            {
+                AwaitForExit("Path is null!");
+                return false;
+            }
+            return true;
+        }
         static string CalculateHash(string filename)
         {
 #if (!MD5) // it use SHA512 if MD5 is not available
 
-// using SHA512 algorith, slower but more precise
+            // using SHA512 algorith, slower but more precise
             try
             {
                 using (var sha = SHA512.Create())
@@ -146,16 +209,16 @@ namespace TEST
             }
             
 #endif
-        }              
+        }
         private static void AwaitForExit(string text)
         {
             Console.WriteLine(text); // write the text passed as parameter
             Console.ReadKey();  // await user read the text
             Environment.Exit(1); // Exit with error code 1 
-        }             
+        }
         public static void GetDiff() // Engine
         {
-            for(int i = 0; i < Hash.Count(); i++)
+            for (int i = 0; i < Hash.Count(); i++)
             {
                 if (Hash[i] != "0")
                 {
@@ -164,12 +227,12 @@ namespace TEST
                         if ((Hash[j] != null) && (Hash[i] == Hash[j]) && (i != j) && (Hash[j] != "0"))
                         {
                             Duplicates.Add(j);
-                            Console.WriteLine($"\n>===========\n{Path.GetFileName(FilesPath[i])}\nHash: {Hash[i]}\n\n{Path.GetFileName(FilesPath[j])}\nHash: {Hash[j]}\n>===========");
+                            //Console.WriteLine($"\n>===========\n{Path.GetFileName(FilesPath[i])}\nHash: {Hash[i]}\n\n{Path.GetFileName(FilesPath[j])}\nHash: {Hash[j]}\n>===========");
                             Hash[j] = "0"; // so the hash will not be researched once reached. Is a stupid solution, but atm necessary
                             countDuplicates++;
-                        } 
+                        }
                     }
-                } 
+                }
             }
         }
         public static void ResetGlobal()
